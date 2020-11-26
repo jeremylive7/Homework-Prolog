@@ -1,0 +1,104 @@
+Tarea 
+    final_state
+    move
+    update
+    legal
+    initial_state
+    value $solo para hill-climbing y best-first
+
+Caso #1
+
+    Alberto, 1
+    Beatriz, 2
+    Carlos, 5
+    Dora, 10
+    Emilio, 15
+
+persona(Alberto, 1).
+persona(Beatriz, 2).
+persona(Carlos, 5).
+persona(Dora, 10).
+persona(Emilio, 15).
+
+estructura1(
+    persona(Alberto, 1),
+    persona(Beatriz, 2),
+    persona(Carlos, 5),
+    persona(Dora, 10),
+    persona(Emilio, 15)
+).
+
+
+    Pass 2.
+    Total <= 28
+
+    0   A, B, C, D, E - []
+    2   C, D, E - A, B 
+    1   A, C, D, E - B 
+    15  A, C - D, E, B 
+    2   B, A, C - D, E
+    2   C - B, A, D, E 
+    1   A, C - B, D, E 
+    5   [] - A, C, B, D, E
+    Total = 23
+
+Caso #2
+
+    Alberto, 1
+    Beatriz, 2
+    Carlos, 5
+    Dora, 10
+    Emilio, 15
+
+    Pass 3.
+    Total <= 21
+
+    0   A, B, C, D, E - []
+    5   D, E - A, B, C
+    1   A, D, E - B, C
+    15  [] - A, D, E, B, C 
+    Total = 21
+
+Caso #3
+
+    Alberto, 1
+    Beatriz, 2
+    Carlos, 5
+    Dora, 10
+    Emilio, 15
+    Julio, 20
+
+    Pass 2.
+    Total <= 42
+
+    0   A, B, C, D, E, J - []
+    2   C, D, E, F - A, B 
+    1   A, C, D, E, J - B
+    20  A, C, D - E, J, B 
+    2   B, A, C, D - E, J
+    2   C, D - B, A, E, J 
+    1   A, C, D - B, E, J 
+    10  A - C, D, B, E, J
+    2   B, A - C, D, E, J
+    2   [] - B, A, C, D, E, J
+    Total = 42 
+
+Caso #4
+
+    Alberto, 1
+    Beatriz, 2
+    Carlos, 5
+    Dora, 10
+    Emilio, 15
+    Julio, 20
+
+    Pass 3.
+    Total <= 30
+
+    0   A, B, C, D, E, J - []
+    5   D, E, J - A, B, C
+    1   A, D, E, J - B, C
+    20  A - D, E, J, B, C
+    2   B, A - D, E, J, C 
+    2   [] - B, A, D, E, J, C 
+    Total = 30
