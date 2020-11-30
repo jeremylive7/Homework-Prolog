@@ -14,21 +14,6 @@ Caso #1
     Dora, 10
     Emilio, 15
 
-persona(Alberto, 1).
-persona(Beatriz, 2).
-persona(Carlos, 5).
-persona(Dora, 10).
-persona(Emilio, 15).
-
-estructura1(
-    persona(Alberto, 1),
-    persona(Beatriz, 2),
-    persona(Carlos, 5),
-    persona(Dora, 10),
-    persona(Emilio, 15)
-).
-
-
     Pass 2.
     Total <= 28
 
@@ -41,7 +26,7 @@ estructura1(
     1   A, C - B, D, E 
     5   [] - A, C, B, D, E
     Total = 23
-
+ 
 Caso #2
 
     Alberto, 1

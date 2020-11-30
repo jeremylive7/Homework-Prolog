@@ -1,54 +1,26 @@
-/*
- * solve_hill_climb(State,History,Moves)
- *   Moves es la secuencia de movidas requeridas para
- *   alcanzar un estado final deseado a partir de State.
- *   History contiene los estados previamente visitados.
- */
 
-% Si el Estado actual es un estado final, no hay que moverse.
 solve_hill_climb(State,_,[]) :-
     final_state(State).
 
-/*
- * Si el Estado actual no es un estado final, genera una movida
- * para desplazarse a un nuevo estado, y continua la búsqueda a
- * partir de ese nuevo estado.
- * Las movidas son intentadas en el orden establecido por la heurística
- * que evalúa la "bondad" de los estados que se alcanzan para cada movida.
- */
 solve_hill_climb(State,History,[Move|Moves]) :-
-    hill_climb(State,Move),      % generar una nueva Movida en el orden heurístico
+    hill_climb(State,Move),      % generar una nueva Movida en el orden heurÃ­stico
     update(State,Move,State1),   % calcula nuevo estado usando Movida
     legal(State1),               % nuevo estado debe ser legal
-    not(member(State1,History)), % debe ser primera vez que se llega al nuevo estado
-    solve_hill_climb(State1,[State1|History],Moves).   % continuar a partir de nuevo estado
+    insert_sort00(State1,State11),
+    not(member(State11,History)), % debe ser primera vez que se llega al nuevo estado
+    solve_hill_climb(State11,[State1|History],Moves).   % continuar a partir de nuevo estado
 
-/*
- *  A partir de un Estado devuelve una Movida.
- *  Primero genera todas las movidas, luego las evalúa usando una heurística,
- *  y finalmente las va usando en orden decreciente de la evaluación obtenida.
- */
 hill_climb(State,Move) :-
     findall(M,move(State,M),Moves),         % Encuentra todas las movidas posibles
-    evaluate_and_order(Moves,State,[],MVs), % Evalúa con la heurística todas las movidas y las ordena.
-    member((Move,_),MVs).                   % Escoge movidas en orden de heurística
+    evaluate_and_order(Moves,State,[],MVs), % EvalÃºa con la heurÃ­stica todas las movidas y las ordena.
+    member((Move,_),MVs).                   % Escoge movidas en orden de heurÃ­stica
 
-
-/*
- * evaluate_and_order(Movidas,Estado,AcumuladorParcial,MovidasOrdenadas)
- *   Todas las Movidas del Estado actual
- *   son evaluadas y almacenadas en orden en MovidasOrdenadas
- *   Acumulador es donde se van acumulando parcialmente las movidas evaluadas.
- */
-
-% Caso: procesar la primera movida y continuar recursivamente
 evaluate_and_order([Move|Moves],State,MVs,OrderedMVs) :-
     update(State,Move,State1),         % obtiene nuevo estado usando movida
-    value(State1,Value),               % calcula el valor heurísico del nuevo estado
+    value(State1,Value),               % calcula el valor heurÃ­sico del nuevo estado
     insertPair((Move,Value),MVs,MVs1), % inserta en orden el par (movida,valor) en lista de movidas
     evaluate_and_order(Moves,State,MVs1,OrderedMVs).  % procesa recursivamente el resto de movidas
     
-% Caso base: no hay más movidas que evaluar. Se retorna el acumulador como resultado.
 evaluate_and_order([],_,MVs,MVs).
 
 insertPair(MV,[],[MV]).
@@ -57,77 +29,188 @@ insertPair((M,V),[(M1,V1)|MVs],[(M,V),(M1,V1)|MVs]) :-
 insertPair((M,V),[(M1,V1)|MVs],[(M1,V1)|MVs1]) :-
     V < V1,insertPair((M,V),MVs,MVs1).
 
-
-/*
- * Inicializa un problema y lo resuelve.
- *   Problem: nombre del problema.
- *   Moves: movidas requeridas para resolver el problema.
- */
 test_hill_climb(Problem,Moves) :-
    initial_state(Problem,State),           % obtener un Estado inicial dado Problema
-   solve_hill_climb(State,[State],Moves).  % inicia resolución desde Estado
+   solve_hill_climb(State,[State],Moves).  % inicia resoluciÃ³n desde Estado
 
 
+%Caso#1
+%initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],[],28,0,1)).
+%final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],28,28,1)).
 
-% === Relaciones que definen el problema zgm     === %
-% === Son las mismas incluidas en depth-first.pl === %
+%Caso#2
+%initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],[],21,0,2)).
+%final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],21,21,2)).
 
-initial_state(zgm,zgm(izq,[zorra,gallina,maiz],[])).
+%Caso#3
+%initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)],[],42,0,3)).
+%final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)],42,42,3)).
 
-final_state(zgm(der,[],[zorra,gallina,maiz])).
+%Caso#4
+initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio,20)],[],30,0,4)).
+final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio,20)],30,30,4)).
 
-move(zgm(izq,I,_),Carga):-member(Carga,I).
-move(zgm(der,_,D),Carga):-member(Carga,D).
-move(zgm(_,_,_),solo).
 
-update(zgm(B,I,D),Carga,zgm(B1,I1,D1)):-
-update_Bote(B,B1),
-update_margenes(Carga,B,I,D,I1,D1).
+move(ptm(der,_,D,_,_,_),Carga):-select(Carga,D,C2).
+
+move(ptm(izq,I,_,_,_,1),Carga):-member(Carga1,I),member(Carga2,I),Carga1\=Carga2,Carga=[Carga1,Carga2].
+
+move(ptm(izq,I,_,_,_,2),Carga):-select2(Carga,I,C2).
+
+move(ptm(izq,I,_,_,_,3),Carga):-member(Carga1,I),member(Carga2,I),Carga1\=Carga2,Carga=[Carga1,Carga2].
+
+move(ptm(izq,[I1,I2],_,_,_,4),Carga):-Carga=[I1,I2],!.
+move(ptm(izq,I,_,_,_,4),Carga):-select2(Carga,I,C2).
+
+update(ptm(B,I,D,TT,TA,M),Carga,ptm(B1,I1,D1,TT,TAA,M)):-
+      update_Bote(B,B1),                   
+      update_margenes(Carga,B,I,D,I1,D1,TA,TAA,M).   
 
 update_Bote(izq,der).
 update_Bote(der,izq).
 
-update_margenes(solo,_,I,D,I,D).
-update_margenes(Carga,izq,I,D,I1,D1):-
-      select(Carga,I,I1),
-      insert(Carga,D,D1).
-update_margenes(Carga,der,I,D,I1,D1):-
-      select(Carga,D,D1),
-      insert(Carga,I,I1).
+update_margenes(Carga,izq,I,D,I1,D1,TA,TAA,1):-
+      select1(Carga,I,I1),       
+      insert1(Carga,D,D1),        
+      sumarTiempo1(Carga,TA,TAA).
 
-insert(X,[Y|Ys],[X,Y|Ys]):-precedes(X,Y).
-insert(X,[Y|Ys],[Y|Zs]):-precedes(Y,X),insert(X,Ys,Zs).
-insert(X,[],[X]).
+update_margenes(Carga,der,I,D,I1,D1,TA,TAA,1):-
+      select(Carga,D,D1),    
+      insert(Carga,I,I1),      
+      sumarTiempo(Carga,TA,TAA).
 
-select(X,[X|Xs],Xs).
-select(X,[Y|Ys],[Y|Zs]):-select(X,Ys,Zs).
+update_margenes(Carga,der,I,D,I1,D1,TA,TAA,2):-
+      select(Carga,D,D1),    
+      insert22(Carga,I,I1),      
+      sumarTiempo(Carga,TA,TAA).
 
-% Caso no determinístico
-% precedes(zorra,_).
-% precedes(_,maiz).
+update_margenes(Carga,izq,I,D,I1,D1,TA,TAA,2):-
+      select2(Carga,I,I1),       
+      insert2(Carga,D,D1),        
+      sumarTiempo2(Carga,TA,TAA).
 
-% Caso determinístico
-precedes(zorra,gallina).
-precedes(zorra,maiz).
-precedes(gallina,maiz).
+update_margenes(Carga,izq,I,D,I1,D1,TA,TAA,3):-
+      select1(Carga,I,I1),       
+      insert33(Carga,D,D1),        
+      sumarTiempo1(Carga,TA,TAA).
+
+update_margenes(Carga,der,I,D,I1,D1,TA,TAA,3):-
+      select(Carga,D,D1),    
+      insert3(Carga,I,I1),      
+      sumarTiempo(Carga,TA,TAA).
+
+update_margenes(Carga,izq,[I1,I2],D,I11,D1,TA,TAA,4):-
+      select1(Carga,[I1,I2],I11),       
+      insert44(Carga,D,D1),        
+      sumarTiempo1(Carga,TA,TAA).
+
+update_margenes(Carga,izq,I,D,I1,D1,TA,TAA,4):-
+      select2(Carga,I,I1),       
+      insert444(Carga,D,D1),        
+      sumarTiempo2(Carga,TA,TAA).
+
+update_margenes(Carga,der,I,D,I1,D1,TA,TAA,4):-
+      select(Carga,D,D1),    
+      insert4(Carga,I,I1),      
+      sumarTiempo(Carga,TA,TAA).
+
+sumarTiempo((U,X),TA,TAA):-TAA is TA+X.
+sumarTiempo1([X,(U,Y)],TA,TAA):-TAA is TA+Y.
+sumarTiempo2([X,U,(O,Y)],TA,TAA):-TAA is TA+Y.
+
+insert(X,[Y|Ys],[X,Y|Ys]):-precedes11(X,[Y|Ys]).
+insert(X,[Y|Ys],[Y|Zs]):-precedes11(X,Y),insert(X,Ys,Zs). 
+insert(X,[],[X]).                        
+
+insert1([X,Z],[Y|Ys],[X,Z,Y|Ys]):-precedes1([X,Z],[Y|Ys]).
+insert1([X,Z],[Y|Ys],[Y|Zs]):-precedes1([X,Z],[Y|Ys]),insert1([X,Z],Ys,Zs).  
+insert1([X,Z],[],[X,Z]).      
+
+insert2([X,Z,U],[Y|Ys],[X,Z,U,Y|Ys]):-precedes2([X,Z,U],[Y|Ys]).
+insert2([X,Z,U],[Y|Ys],[Y|Zs]):-precedes2([X,Z,U],[Y|Ys]),insert2([X,Z,U],Ys,Zs).  
+insert2([X,Z,U],[],[X,Z,U]).         
+
+insert22(X,[Y|Ys],[X,Y|Ys]):-precedes22(X,[Y|Ys]).
+insert22(X,[Y|Ys],[Y|Zs]):-precedes22(X,Y),insert22(X,Ys,Zs). 
+insert22(X,[],[X]).     
+
+insert3(X,[Y|Ys],[X,Y|Ys]):-precedes3(X,[Y|Ys]).
+insert3(X,[Y|Ys],[Y|Zs]):-precedes3(X,Y),insert3(X,Ys,Zs). 
+insert3(X,[],[X]).                        
+
+insert33([X,Z],[Y|Ys],[X,Z,Y|Ys]):-precedes33([X,Z],[Y|Ys]).
+insert33([X,Z],[Y|Ys],[Y|Zs]):-precedes33([X,Z],[Y|Ys]),insert33([X,Z],Ys,Zs).  
+insert33([X,Z],[],[X,Z]).     
+
+insert4(X,[Y|Ys],[X,Y|Ys]):-precedes4(X,[Y|Ys]).
+insert4(X,[Y|Ys],[Y|Zs]):-precedes4(X,Y),insert4(X,Ys,Zs). 
+insert4(X,[],[X]).   
+
+insert44([X,Z],[Y|Ys],[X,Z,Y|Ys]):-precedes44([X,Z],[Y|Ys]).
+insert44([X,Z],[Y|Ys],[Y|Zs]):-precedes44([X,Z],[Y|Ys]),insert44([X,Z],Ys,Zs).  
+insert44([X,Z],[],[X,Z]). 
+
+insert444([X,Z,U],[Y|Ys],[X,Z,U,Y|Ys]):-precedes44([X,Z,U],[Y|Ys]).
+insert444([X,Z,U],[Y|Ys],[Y|Zs]):-precedes44([X,Z,U],[Y|Ys]),insert444([X,Z,U],Ys,Zs).  
+insert444([X,Z,U],[],[X,Z,U]).     
+
+select(X,[X|Xs],Xs).                         
+select(X,[Y|Ys],[Y|Zs]):-select(X,Ys,Zs).     
+
+select1([X,Z],[X,Z|Xs],Xs).                        
+select1([X,Z],[Y|Ys],[Y|Zs]):-select1([X,Z],Ys,Zs).  
+
+select2([X,Z,U],[X,Z,U|Xs],Xs).                        
+select2([X,Z,U],[Y|Ys],[Y|Zs]):-select2([X,Z,U],Ys,Zs).  
+
+precedes11((alberto,1),[(carlos,5),(dora,10),(emilio,15)]).
+precedes11((beatriz,2),[(alberto,1),(carlos,5)]).
+precedes11((alberto,1),[(carlos,5)]).
+precedes1([(alberto,1),(beatriz,2)],[]).
+precedes1([(dora,10),(emilio,15)],[(beatriz,2)]).
+precedes1([(alberto,1),(beatriz,2)],[(dora,10),(emilio,15)]).
+precedes1([(alberto,1),(carlos,5)],[(beatriz,2),(dora,10),(emilio,15)]).
+
+precedes22((alberto,1),[(dora,10),(emilio,15)]).
+precedes2([(alberto,1),(beatriz,2),(carlos,5)],[]).
+precedes2([(alberto,1),(dora,10),(emilio,15)],[(beatriz,2),(carlos,5)]).
+
+precedes3((alberto,1),[(carlos,5),(dora,10),(emilio,15),(julio,20)]).
+precedes3((beatriz,2),[(alberto,1),(carlos,5),(dora,10)]).
+precedes3((alberto,1),[(carlos,5),(dora,10)]).
+precedes3((beatriz,2),[(alberto,1)]).
+precedes33([(alberto,1),(beatriz,2)],[]).
+precedes33([(emilio,15),(julio,20)],[(beatriz,2)]).
+precedes33([(alberto,1),(beatriz,2)],[(emilio,15),(julio,20)]).
+precedes33([(carlos,5),(dora,10)],[(beatriz,2),(emilio,15),(julio,20)]).
+precedes33([(alberto,1),(beatriz,2)],[(carlos,5),(dora,10),(emilio,15),(julio,20)]).
+
+precedes4((alberto,1),[(dora,10),(emilio,15),(julio,20)]).
+precedes4((beatriz,2),[(alberto,1)]).
+precedes44([(alberto,1),(beatriz,2),(carlos,5)],[]).
+precedes44([(dora,10),(emilio,15),(julio,20)],[(beatriz,2),(carlos,5)]).
+precedes44([(alberto,1),(beatriz,2)],[(carlos,5),(dora,10),(emilio,15),(julio,20)]).
+
+legal(ptm(izq,_,D,TT,TA,M)):-not(ilegal(TT,TA)). 
+legal(ptm(der,I,_,TT,TA,M)):-not(ilegal(TT,TA)).
+
+ilegal(TT,TA):-TA>TT.
+
+insert_sort00(ptm(izq,I,D,TT,TA,M),L):-insert_sort2(I,I2),L=ptm(izq,I2,D,TT,TA,M).
+insert_sort00(ptm(der,I,D,TT,TA,M),L):-insert_sort2(D,D2),L=ptm(der,I,D2,TT,TA,M).
+
+insert_sort2(List,Sorted):-i_sort2(List,[],Sorted).
+i_sort2([],Acc,Acc).
+i_sort2([(O,X)|T],Acc,Sorted):-insert22((O,X),Acc,NAcc),i_sort2(T,NAcc,Sorted).
+   
+insert22((O,X),[(P,Y)|T],[(P,Y)|NT]):-X>Y,insert22((O,X),T,NT).
+insert22((O,X),[(P,Y)|T],[(O,X),(P,Y)|T]):-X=<Y.
+insert22((O,X),[],[(O,X)]).
 
 
-legal(zgm(izq,_,D)):-not(ilegal(D)).
-legal(zgm(der,I,_)):-not(ilegal(I)).
 
-ilegal(L):-member(zorra,L),member(gallina,L).
-ilegal(L):-member(gallina,L),member(maiz,L).
-
-% === Fin de las relaciones usadas por depth-first.pl ==%
+value(p3(der,_,[(alberto,1),(beatriz,2)|_]),5):-!.
+value(p3(der,_,[(alberto,1)|_]),4).
 
 
-% === Relación adicional requerida por hill-climb para resolver zgm. === %
-% === Value/2 es una heurísica que da valores más altos conforme     === %
-% === haya más cosas en la rivera derecha.                           === %
-
-value(zgm(_,_,[]),0).
-value(zgm(_,_,[_]),1).
-value(zgm(_,_,[_,_]),2).
-value(zgm(_,_,[_,_,_]),3).
-
-
+value(p3(_,_,_),0).
