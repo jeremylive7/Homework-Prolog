@@ -102,7 +102,7 @@ update_margenes(Carga,der,I,D,I1,D1,TA,TAA,3):-
 update_margenes(Carga,izq,[I1,I2],D,I11,D1,TA,TAA,4):-
       select1(Carga,[I1,I2],I11),       
       insert44(Carga,D,D1),        
-      sumarTiempo1(Carga,TA,TAA).
+      sumarTiempo1(Carga,TA,TAA),!.
 
 update_margenes(Carga,izq,I,D,I1,D1,TA,TAA,4):-
       select2(Carga,I,I1),       
@@ -207,10 +207,7 @@ insert22((O,X),[(P,Y)|T],[(P,Y)|NT]):-X>Y,insert22((O,X),T,NT).
 insert22((O,X),[(P,Y)|T],[(O,X),(P,Y)|T]):-X=<Y.
 insert22((O,X),[],[(O,X)]).
 
-
-
 value(p3(der,_,[(alberto,1),(beatriz,2)|_]),5):-!.
 value(p3(der,_,[(alberto,1)|_]),4).
-
 
 value(p3(_,_,_),0).
