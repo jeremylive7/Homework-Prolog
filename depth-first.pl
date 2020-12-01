@@ -81,7 +81,7 @@ update_margenes(Carga,der,I,D,I1,D1,TA,TAA,3):-
 update_margenes(Carga,izq,[I1,I2],D,I11,D1,TA,TAA,4):-
       select1(Carga,[I1,I2],I11),       
       insert44(Carga,D,D1),        
-      sumarTiempo1(Carga,TA,TAA).
+      sumarTiempo1(Carga,TA,TAA),!.
 
 update_margenes(Carga,izq,I,D,I1,D1,TA,TAA,4):-
       select2(Carga,I,I1),       
