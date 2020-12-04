@@ -1,3 +1,23 @@
+
+
+
+kaka(M,Z,R):-reverse(M,B),getTwo(B,Z),delete(B,K),reverse(K,R).
+getTwo([X,Y|W],Z):-Z=[X,Y].
+delete([X,Y|H],R):-R=H.
+
+
+
+coca(M,N):-M==1,N=11.
+coca(M,N):-M==2,N=22.
+
+
+
+
+moved(ptm(izq,I,_,_,_,M,N,_),Carga):-M==2,N==1,getLower(I,Carga,R),N=0,I=R,!.
+getLower(M,Z,R):-reverse(M,B),getTwo(B,Z),delete(B,K),reverse(K,R).
+delete([X,Y|H],R):-R=H.
+
+
 % findall(X,persona(Y,X),L),reverse(L,L2),member(L3,L2).
 %  [(Alberto, 1),(Beatriz, 2),(Carlos, 5),(Dora, 10),(Emilio, 15)]
 
@@ -136,5 +156,19 @@ rango(M,N,[M|Ns]) :- M < N, M1 is M + 1, rango(M1,N,Ns).
 rango(N,N,[N]).
 
 
+
+
+move(ptm(izq,I,_,_,_,2,_,_),Carga):-moves(I,Carga).
+
+moves([],[]).
+moves([U|Cadena],Focus):- getTuplas(U,Cadena,Z),
+                          moves(Cadena,Return),
+                          fusion(Z,Return,Focus).
+
+getTuplas(U,[],[]).
+getTuplas(U,[N|Nodo],[(U,N)|Return]):- getTuplas(U,Nodo,(Return)).
+
+fusion([],Tolerant,Tolerant).
+fusion([W|Wubo],Tolerant,[W|Return]):- fusion(Wubo,Tolerant,Return).
 
 
