@@ -37,21 +37,32 @@ test_hill_climb(Problem,Moves) :-
 
 %                        0          1      2     3           4           5     6
 %Caso#1.. Parametros(Bote,Izquierda,Derecha,LimitTime,ActualTime,Cantidad,listaOriginal)
-%initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],[],28,0,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
-%final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],28,28,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
+initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],[],28,0,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
+final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],28,28,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
+%Resultado: 
+%test_hill_climb(ptm,M1).
+%M1 = [[(alberto, 1),  (beatriz, 2)],  (alberto, 1), [(dora, 10),  (emilio, 15)],  (beatriz, 2), [(alberto, 1),  (beatriz, 2)],  (alberto, 1), [(alberto, 1),  (carlos, 5)]] ;
 
 %Caso#3.
 %initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)],[],42,0,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)])).
 %final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)],42,42,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)])).
+%Resultado: 
+%test_hill_climb(ptm,M1).
+%M1 = [[(alberto, 1),  (beatriz, 2)],  (alberto, 1), [(emilio, 15),  (julio, 20)],  (beatriz, 2), [(alberto, 1),  (beatriz, 2)],  (alberto, 1), [(carlos, 5),  (dora, 10)],  (beatriz, 2), [(alberto, 1),(beatriz, 2)]] ;
 
 %Caso#2.
-initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],[],21,0,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
-final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],21,21,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
+%initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],[],21,0,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
+%final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],21,21,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
+%Resultado: 
+%test_hill_climb(ptm,M1).
+%M1 = [[(alberto, 1),  (beatriz, 2),  (carlos, 5)],  (alberto, 1), [(alberto, 1),  (dora, 10),  (emilio, 15)]] ;
 
 %Caso#4.
 %initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)],[],30,0,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)])).
 %final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)],30,30,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)])).
-
+%Resultado:
+%test_hill_climb(ptm,M1).
+%M1 = [[(alberto, 1),  (beatriz, 2),  (carlos, 5)],  (alberto, 1), [(dora, 10),  (emilio, 15),  (julio, 20)],  (beatriz, 2), [(alberto, 1),  (beatriz, 2)]] ;
 
 
 %Derecha a Izquierda simpre va a pasarse el primero, como esta ordenada la lista entonces es el mas rapido. Para todos los casos.
@@ -293,35 +304,35 @@ noEsElMasRapido2([N,M|W],X):-X\=M,!.
 
 
 %Caso de parada.
-value(ptm(der,[],_,_,_,2,_),10):-!.
+value(ptm(der,[],_,_,_,_,_),10):-!.
 
 %Valido que sea mejor pasar de der a izq cuando hayan mas elementos al lado derecho y que los primeros dos sean los dos mas rapidos
-value(ptm(der,_,[X,_,_,_,_],_,_,2,O),5):-esElMasRapido2(O,X),!.
-value(ptm(der,_,[X,Y,_,_],_,_,2,O),7):-esRapido(O,[X,Y]),!.
-value(ptm(der,_,[X,_,_],_,_,2,O),5):-esElMasRapido2(O,X),!.
-value(ptm(der,_,[X,Y],_,_,2,O),3):-esRapido(O,[X,Y]),!.
+value(ptm(der,_,[X,_,_,_,_],_,_,_,O),7):-esElMasRapido2(O,X),!.
+value(ptm(der,_,[X,Y,_,_],_,_,_,O),7):-esRapido(O,[X,Y]),!.
+value(ptm(der,_,[X,_,_],_,_,_,O),5):-esElMasRapido2(O,X),!.
+value(ptm(der,_,[X,Y],_,_,_,O),3):-esRapido(O,[X,Y]),!.
 
 %Valido que sean los dos mas rapidos del lado izq y que sea mejor que en el lado derecho haya uno o mas elementos.
-value(ptm(izq,[X,Y|_],[V|_],_,_,2,O),7):-esRapido(O,[X,Y]),!.
-value(ptm(izq,[X|_],_,_,_,2,O),7):-esElMasRapido2(O,X),!.
-value(ptm(izq,[X,Y|_],[],_,_,2,O),5):-esRapido(O,[X,Y]),!.
-value(ptm(izq,[X,Y|_],[_],_,_,2,O),1):-esRapido(O,[X,Y]),!.
+value(ptm(izq,[X,Y|_],[V|_],_,_,_,O),7):-esRapido(O,[X,Y]),!.
+value(ptm(izq,[X|_],_,_,_,_,O),7):-esElMasRapido2(O,X),!.
+value(ptm(izq,[X,Y|_],[],_,_,_,O),5):-esRapido(O,[X,Y]),!.
+value(ptm(izq,[X,Y|_],[_],_,_,_,O),1):-esRapido(O,[X,Y]),!.
 
 %Valida que sean del lado derecho el primero el rapido o los dos primeros los dos mas rapidos.
-value(ptm(izq,_,[V],_,_,2,O),7):-esElMasRapido2(O,V),!.
-value(ptm(izq,_,[V,M|_],_,_,2,O),7):-esElMasRapido2(O,V),noEsElMasRapido2(O,M),!.
-value(ptm(izq,_,[X,Y|_],_,_,2,O),1):-esRapido(O,[X,Y]),!.
-value(ptm(izq,_,[X,Y],_,_,2,O),1):-esRapido(O,[X,Y]),!.
+value(ptm(izq,_,[V],_,_,_,O),7):-esElMasRapido2(O,V),!.
+value(ptm(izq,_,[V,M|_],_,_,_,O),7):-esElMasRapido2(O,V),noEsElMasRapido2(O,M),!.
+value(ptm(izq,_,[X,Y|_],_,_,_,O),1):-esRapido(O,[X,Y]),!.
+value(ptm(izq,_,[X,Y],_,_,_,O),1):-esRapido(O,[X,Y]),!.
 
 %Ejm: value(ptm(izq, [(alberto, 1),  (carlos, 5),  (dora, 10),  (emilio, 15)], [(beatriz, 2)], 28, 3, 2..
-value(ptm(der,_,[X],_,_,_,2,_),1):-esElMasRapido(O,X),!.
-value(ptm(der,_,[X|_],_,_,_,2,_),1):-esMuyRapido(O,X),!.
+value(ptm(der,_,[X],_,_,_,_,_),1):-esElMasRapido(O,X),!.
+value(ptm(der,_,[X|_],_,_,_,_,_),1):-esMuyRapido(O,X),!.
 
 %Valida que es ilogico que mueva al mas rapido al lado izquierdo habiendo ya completado todo.
-value(ptm(izq,[X],[Y|_],_,_,2,O),1):-esElMasRapido2(O,[X,Y]),!.
+value(ptm(izq,[X],[Y|_],_,_,_,O),1):-esElMasRapido2(O,[X,Y]),!.
 
 %Ver cuando solo tengo elementos justos en el lado derecho para mover de una vez
-value(ptm(der,[],[X|Xs],_,_,2,O),0):-!.
+value(ptm(der,[],[X|Xs],_,_,_,O),0):-!.
 
 %Caso por defecto.
 value(ptm(_,_,_,_,_,_,_,_),0).
