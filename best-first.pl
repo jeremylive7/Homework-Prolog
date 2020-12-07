@@ -74,37 +74,25 @@ test_best_search(Problem,Moves) :-
    solve_best([punto(State,[],Value)],[State],Moves). % inicializa frontera e historial,
                                                       % inicia resoluci�n
 
-% solve_best([], [ptm(izq, [(beatriz, 2),  (alberto, 1),  (carlos, 5)], [(dora, 10),  (emilio, 15)], 28, 20, 2,
+%-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 %                        0          1      2     3           4           5     6
 %Caso#1.. Parametros(Bote,Izquierda,Derecha,LimitTime,ActualTime,Cantidad,listaOriginal)
-initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],[],28,0,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
-final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],28,28,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
-%Resultado: 
-%test_hill_climb(ptm,M1).
-%M1 = [[(alberto, 1),  (beatriz, 2)],  (alberto, 1), [(dora, 10),  (emilio, 15)],  (beatriz, 2), [(alberto, 1),  (beatriz, 2)],  (alberto, 1), [(alberto, 1),  (carlos, 5)]] ;
+%initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],[],28,0,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
+%final_state(ptm(der,[],_,28,28,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
 
 %Caso#3.
 %initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)],[],42,0,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)])).
-%final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)],42,42,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)])).
-%Resultado: 
-%test_hill_climb(ptm,M1).
-%M1 = [[(alberto, 1),  (beatriz, 2)],  (alberto, 1), [(emilio, 15),  (julio, 20)],  (beatriz, 2), [(alberto, 1),  (beatriz, 2)],  (alberto, 1), [(carlos, 5),  (dora, 10)],  (beatriz, 2), [(alberto, 1),(beatriz, 2)]] ;
+%final_state(ptm(der,[],_,42,42,2,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)])).
 
 %Caso#2.
-%initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],[],21,0,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
-%final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],21,21,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
-%Resultado: 
-%test_hill_climb(ptm,M1).
-%M1 = [[(alberto, 1),  (beatriz, 2),  (carlos, 5)],  (alberto, 1), [(alberto, 1),  (dora, 10),  (emilio, 15)]] ;
+initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)],[],21,0,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
+final_state(ptm(der,[],_,21,21,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15)])).
 
 %Caso#4.
 %initial_state(ptm,ptm(izq,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)],[],30,0,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)])).
-%final_state(ptm(der,[],[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)],30,30,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)])).
-%Resultado:
-%test_hill_climb(ptm,M1).
-%M1 = [[(alberto, 1),  (beatriz, 2),  (carlos, 5)],  (alberto, 1), [(dora, 10),  (emilio, 15),  (julio, 20)],  (beatriz, 2), [(alberto, 1),  (beatriz, 2)]] ;
+%final_state(ptm(der,[],_,30,30,3,[(alberto, 1),  (beatriz, 2),  (carlos, 5),  (dora, 10),  (emilio, 15), (julio, 20)])).
 
 
 %Derecha a Izquierda simpre va a pasarse el primero, como esta ordenada la lista entonces es el mas rapido. Para todos los casos.
@@ -249,12 +237,12 @@ insertTupla([X,Z],[],[X,Z],O,I).
 selectTripleta([X,Z,U],[X,Z,U|Xs],Xs).                        
 selectTripleta([X,Z,U],[Y|Ys],[Y|Zs]):-selectTripleta([X,Z,U],Ys,Zs).   
 
-insertTripleta([X,Z,U],[Y|Ys],[X,Z,U,Y|Ys],O,I):-verdaderoTripleta([X,Z,U],[Y|Ys],O,I).
-insertTripleta([X,Z,U],[Y|Ys],[Y|Zs],O,I):-verdaderoTripleta([X,Z,U],[Y|Ys],O,I),insertTripleta([X,Z,U],Ys,Zs,O,I).  
+insertTripleta([X,Z,U],[Y|Ys],[X,Z,U,Y|Ys],O,I):-verdaderoTupla([X,Z,U],[Y|Ys],O,I).
+insertTripleta([X,Z,U],[Y|Ys],[Y|Zs],O,I):-verdaderoTupla([X,Z,U],[Y|Ys],O,I),insertTripleta([X,Z,U],Ys,Zs,O,I).  
 insertTripleta([X,Z,U],[],[X,Z,U],O,I).                           
 
-insertTripletaFinal([X,Z],[Y|Ys],[X,Z,Y|Ys],O,I):-verdaderoTripleta([X,Z],[Y|Ys],O,I).
-insertTripletaFinal([X,Z],[Y|Ys],[Y|Zs],O,I):-verdaderoTripleta([X,Z],[Y|Ys],O,I),insertTripletaFinal([X,Z],Ys,Zs,O,I).  
+insertTripletaFinal([X,Z],[Y|Ys],[X,Z,Y|Ys],O,I):-verdaderoTupla([X,Z],[Y|Ys],O,I).
+insertTripletaFinal([X,Z],[Y|Ys],[Y|Zs],O,I):-verdaderoTupla([X,Z],[Y|Ys],O,I),insertTripletaFinal([X,Z],Ys,Zs,O,I).  
 insertTripletaFinal([X,Z],[],[X,Z],O,I).   
 
 
@@ -269,8 +257,14 @@ esElMasRapido1([V,Y|W],X):-X==Y,!.
 
 
 %De izquierda a derecha
-%Caso final del caso 1, 3.
+%Caso final del caso 1, 3 y 4.
 verdaderoTupla([X,Y],_,_,[J,K]):-X==J,Y==K,!.
+
+%Cuando son tres elementos la movida. Caso final del caso 2
+verdaderoTupla([X,Y,Z],_,_,[J,K,L]):-X==J,Y==K,Z==L,!.
+
+%Cuando son tres elementos son los mas lentos? Cuando a la derecha hay dos elementos.
+verdaderoTupla([X,Y,Z],[J,K],O,_):-reverse(O,B),esLento2(B,[X,Y,Z]),!.
 
 %Digo si la primera movida es valida, es la mas rapida?
 verdaderoTupla([X,Y],[],O,_):-esRapido(O,[X,Y]),!.
@@ -289,18 +283,6 @@ esLower(M,V):-reverse(M,B),delete(B,V).
 
 %Es cierto si la movida es la mas lenta
 esLento([N,M|W],[X,Y]):-X==M,Y==N.
-
-
-
-
-%Cuando son tres elementos
-verdaderoTripleta([X,Y],_,_,[J,K]):-X==J,Y==K,!.
-
-%Caso final del caso 2
-verdaderoTripleta([X,Y,Z],_,_,[J,K,L]):-X==J,Y==K,Z==L,!.
-
-%Cuando son tres elementos son los mas lentos? Cuando a la der hay dos elementos.
-verdaderoTripleta([X,Y,Z],[J,K],O,_):-reverse(O,B),esLento2(B,[X,Y,Z]),!.
 
 %Valida que sean los tres mas lentos.
 esLento2([N,M,K|W],[X,Y,Z]):-X==K,Y==M,Z==N.
